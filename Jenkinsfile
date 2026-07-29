@@ -3,10 +3,22 @@ pipeline {
 
     stages {
 
-        stage('Build') {
+        stage('Compile') {
             steps {
                 sh 'chmod +x gradlew'
-                sh './gradlew build'
+                sh './gradlew clean classes'
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                sh './gradlew test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh './gradlew bootJar'
             }
         }
     }
