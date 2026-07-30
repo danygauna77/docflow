@@ -1,7 +1,19 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
         stage('Compile') {
             steps {
@@ -34,11 +46,13 @@ pipeline {
         }
 
         always {
-            junit 'build/test-results/test/*.xml'
+                currentBuild.displayName = "#${BUILD_NUMBER} - ${BRANCH_NAME}"
 
-            archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+                junit 'build/test-results/test/*.xml'
 
-            cleanWs()
-        }
+                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+
+                cleanWs()
+            }
     }
 }
