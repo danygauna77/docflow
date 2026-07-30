@@ -46,7 +46,7 @@ pipeline {
         }
 
         always {
-                currentBuild.displayName = "#${BUILD_NUMBER} - ${BRANCH_NAME}"
+                currentBuild.displayName = "#${env.BUILD_NUMBER} - ${env.BRANCH_NAME}"
 
                 junit 'build/test-results/test/*.xml'
 
