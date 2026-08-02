@@ -22,6 +22,13 @@ pipeline {
             }
         }
 
+        stage('CheckStyle') {
+            steps {
+                sh 'chmod +x gradlew'
+                sh './gradlew checkstyleMain'
+            }
+        }
+
         stage('Unit Tests') {
             steps {
                 sh './gradlew test'
