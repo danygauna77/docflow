@@ -5,6 +5,7 @@ plugins {
 	id 'org.springframework.boot' version '4.1.0'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'org.asciidoctor.jvm.convert' version '4.0.5'
+	id 'com.github.spotbugs' version '6.2.4'
 }
 
 group = 'com.danygi'
@@ -107,4 +108,18 @@ jacocoTestReport {
 
 test {
 	finalizedBy jacocoTestReport
+}
+
+spotbugs {
+	toolVersion = '4.9.4'
+	ignoreFailures = false
+	showProgress = true
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+
+	reports {
+		html.required = true
+		xml.required = true
+	}
 }

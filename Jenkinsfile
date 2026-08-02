@@ -12,20 +12,25 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                sh 'chmod +x gradlew'
             }
         }
 
         stage('Compile') {
             steps {
-                sh 'chmod +x gradlew'
                 sh './gradlew clean classes'
             }
         }
 
         stage('CheckStyle') {
             steps {
-                sh 'chmod +x gradlew'
                 sh './gradlew checkstyleMain'
+            }
+        }
+
+        stage('SpotBugs') {
+            steps {
+                sh './gradlew spotbugsMain'
             }
         }
 
@@ -54,15 +59,21 @@ pipeline {
 
         always {
 
-                script {
-                        currentBuild.displayName = "#${env.BUILD_NUMBER} - ${env.BRANCH_NAME}"
-                    }
-
-                junit 'build/test-results/test/*.xml'
-
-                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
-
-                cleanWs()
+            script {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} - ${env.BRANCH_NAME}"
             }
+
+            junit 'build/test-results/test/*.xml'
+
+            archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+
+            archiveArtifacts artifacts: 'build/reports/checkstyle/**/*.*', fingerprint: true
+
+            archiveArtifacts artifacts: 'build/reports/spotbugs/**/*.*', fingerprint: true
+
+            archiveArtifacts artifacts: 'build/reports/jacoco/**/*.*', fingerprint: true
+
+            cleanWs()
+        }
     }
 }
