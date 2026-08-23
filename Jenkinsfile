@@ -34,6 +34,12 @@ pipeline {
             }
         }
 
+        stage('PMD') {
+            steps {
+                sh './gradlew pmdMain'
+            }
+        }
+
         stage('Unit Tests') {
             steps {
                 sh './gradlew test'
@@ -70,6 +76,8 @@ pipeline {
             archiveArtifacts artifacts: 'build/reports/checkstyle/**/*.*', fingerprint: true
 
             archiveArtifacts artifacts: 'build/reports/spotbugs/**/*.*', fingerprint: true
+
+            archiveArtifacts artifacts: 'build/reports/pmd/**/*.*', fingerprint: true
 
             archiveArtifacts artifacts: 'build/reports/jacoco/**/*.*', fingerprint: true
 

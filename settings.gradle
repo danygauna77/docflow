@@ -1,1 +1,5 @@
-rootProject.name = 'apidocflow'
+pluginManagement {
+    includeBuild("../danygi-build-logic")
+}
+
+rootProject.name = "apidocflow"
