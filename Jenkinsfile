@@ -16,6 +16,16 @@ pipeline {
             }
         }
 
+        stage('Checkout Build Logic') {
+            steps {
+                sh '''
+                    cd ..
+                    rm -rf danygi-build-logic
+                    git clone https://github.com/danygauna77/danygi-build-logic.git
+                '''
+            }
+        }
+
         stage('Compile') {
             steps {
                 sh './gradlew clean classes'
@@ -69,7 +79,7 @@ pipeline {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} - ${env.BRANCH_NAME}"
             }
 
-            junit 'build/test-results/test/*.xml'
+            junit allowEmptyResults: true, testResults: 'build/test-results/test/*.xml'
 
             archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
 
