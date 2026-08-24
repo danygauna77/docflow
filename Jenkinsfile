@@ -21,7 +21,7 @@ pipeline {
                 sh '''
                     cd ..
                     rm -rf danygi-build-logic
-                    git clone https://github.com/danygauna77/danygi-build-logic.git
+                    git clone --branch main --single-branch https://github.com/danygauna77/danygi-build-logic.git
                 '''
             }
         }
