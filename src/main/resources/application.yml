@@ -1,3 +1,7 @@
 spring:
   application:
     name: docflow
+
+docflow:
+  libreoffice:
+    executable: "C:/Program Files/LibreOffice/program/soffice.exe"
