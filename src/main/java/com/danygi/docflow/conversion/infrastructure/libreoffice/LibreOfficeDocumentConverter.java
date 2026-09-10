@@ -64,7 +64,14 @@ public class LibreOfficeDocumentConverter implements DocumentConverter {
                 );
             }
 
-            String inputFileName = input.getFileName().toString();
+            Path fileName = input.getFileName();
+
+            if (fileName == null) {
+                throw new IllegalArgumentException("Input path must contain a file name");
+            }
+
+            String inputFileName = fileName.toString();
+
             int extensionIndex = inputFileName.lastIndexOf('.');
 
             String baseName = extensionIndex > 0

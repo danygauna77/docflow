@@ -15,7 +15,7 @@ public class ConverterRegistry {
     private final List<DocumentConverter> converters;
 
     public ConverterRegistry(List<DocumentConverter> converters) {
-        this.converters = converters;
+        this.converters = List.copyOf(converters);
     }
 
     public DocumentConverter getConverter(
