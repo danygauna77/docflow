@@ -13,9 +13,13 @@ class LibreOfficeDocumentConverterTest {
 
 	@Test
 	void shouldConvertOdtToPdf() throws Exception {
-		LibreOfficeProperties properties = new LibreOfficeProperties(
+		String executable = System.getenv().getOrDefault(
+				"LIBREOFFICE_EXECUTABLE",
 				"C:/Program Files/LibreOffice/program/soffice.exe"
 		);
+
+		LibreOfficeProperties properties =
+				new LibreOfficeProperties(executable);
 
 		LibreOfficeDocumentConverter converter =
 				new LibreOfficeDocumentConverter(properties);
