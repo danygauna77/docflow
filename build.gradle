@@ -1,9 +1,11 @@
 plugins {
 	id 'java'
 	id 'checkstyle'
+	id 'jacoco'
 	id 'org.springframework.boot' version '4.1.0'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'org.asciidoctor.jvm.convert' version '4.0.5'
+	id 'com.github.spotbugs' version '6.2.4'
 }
 
 group = 'com.danygi'
@@ -86,5 +88,38 @@ tasks.withType(Checkstyle).configureEach {
 	reports {
 		xml.required = true
 		html.required = true
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.13"
+}
+
+jacocoTestReport {
+
+	dependsOn test
+
+	reports {
+		xml.required = true
+		csv.required = false
+		html.required = true
+	}
+}
+
+test {
+	finalizedBy jacocoTestReport
+}
+
+spotbugs {
+	toolVersion = '4.9.4'
+	ignoreFailures = false
+	showProgress = true
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+
+	reports {
+		html.required = true
+		xml.required = true
 	}
 }
