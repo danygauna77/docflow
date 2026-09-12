@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+            LIBREOFFICE_EXECUTABLE = '/usr/bin/soffice'
+        }
+
     options {
         skipDefaultCheckout(true)
         timestamps()
