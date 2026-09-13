@@ -1,6 +1,7 @@
 package com.danygi.docflow.conversion.infrastructure.libreoffice;
 
 import com.danygi.docflow.conversion.configuration.LibreOfficeProperties;
+import com.danygi.docflow.conversion.domain.ConversionResult;
 import com.danygi.docflow.conversion.domain.DocumentConverter;
 import com.danygi.docflow.conversion.domain.DocumentFormat;
 import org.springframework.stereotype.Component;
@@ -35,9 +36,13 @@ public class LibreOfficeDocumentConverter implements DocumentConverter {
     }
 
     @Override
-    public Path convert(Path input, DocumentFormat target) {
+    public ConversionResult convert(Path input, DocumentFormat target) {
+
+        Path outputDirectory = null;
+        boolean conversionSucceeded = false;
+
         try {
-            Path outputDirectory = Files.createTempDirectory("docflow-conversion-");
+            outputDirectory = Files.createTempDirectory("docflow-conversion-");
 
             String targetExtension = target.name().toLowerCase(Locale.ROOT);
 
@@ -67,7 +72,9 @@ public class LibreOfficeDocumentConverter implements DocumentConverter {
             Path fileName = input.getFileName();
 
             if (fileName == null) {
-                throw new IllegalArgumentException("Input path must contain a file name");
+                throw new IllegalArgumentException(
+                        "Input path must contain a file name"
+                );
             }
 
             String inputFileName = fileName.toString();
@@ -84,11 +91,17 @@ public class LibreOfficeDocumentConverter implements DocumentConverter {
 
             if (!Files.exists(outputFile)) {
                 throw new IllegalStateException(
-                        "LibreOffice did not generate the expected output file: " + outputFile
+                        "LibreOffice did not generate the expected output file: "
+                                + outputFile
                 );
             }
 
-            return outputFile;
+            conversionSucceeded = true;
+
+            return new ConversionResult(
+                    outputFile,
+                    outputDirectory
+            );
 
         } catch (IOException e) {
             throw new IllegalStateException(
@@ -102,6 +115,27 @@ public class LibreOfficeDocumentConverter implements DocumentConverter {
                     "LibreOffice conversion was interrupted",
                     e
             );
+        } finally {
+            if (!conversionSucceeded && outputDirectory != null) {
+                cleanupDirectory(outputDirectory);
+            }
+        }
+    }
+
+    private void cleanupDirectory(Path directory) {
+        try (var files = Files.list(directory)) {
+            files.forEach(path -> {
+                try {
+                    Files.deleteIfExists(path);
+                } catch (IOException ignored) {
+                    // Best effort cleanup
+                }
+            });
+
+            Files.deleteIfExists(directory);
+
+        } catch (IOException ignored) {
+            // Best effort cleanup
         }
     }
 }

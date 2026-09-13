@@ -6,5 +6,5 @@ public interface DocumentConverter {
 
     boolean supports(DocumentFormat source, DocumentFormat target);
 
-    Path convert(Path input, DocumentFormat target);
+    ConversionResult convert(Path input, DocumentFormat target);
 }
