@@ -1,5 +1,6 @@
 package com.danygi.docflow.conversion.service;
 
+import com.danygi.docflow.conversion.domain.ConversionResult;
 import com.danygi.docflow.conversion.domain.DocumentConverter;
 import com.danygi.docflow.conversion.domain.DocumentFormat;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class DocumentConversionService {
         this.converterRegistry = converterRegistry;
     }
 
-    public Path convert(
+    public ConversionResult convert(
             Path input,
             DocumentFormat source,
             DocumentFormat target
